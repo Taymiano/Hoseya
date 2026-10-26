@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orange Money Transfer Receipt</title>
+    <style>
+        /* Base styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f5f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px 10px;
+        }
+
+        /* Matched exact size/proportions of the image */
+        .receipt-container {
+            background: white;
+            width: 100%;
+            max-width: 400px; /* Narrower to match image */
+            border-radius: 6px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Editable text styling */
+        [contenteditable="true"] {
+            outline: none;
+            border-bottom: 1px dashed transparent;
+            transition: border-bottom 0.2s, background-color 0.2s;
+        }
+
+        [contenteditable="true"]:focus {
+            border-bottom: 1px dashed #999;
+            background-color: rgba(0,0,0,0.03);
+        }
+
+        /* --- Header --- */
+        .header {
+            background-color: #f75b00; /* Orange Money Color */
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: -2px;
+        }
+
+        .logo-text {
+            font-weight: 800;
+            font-size: 18px;
+            line-height: 1.1;
+        }
+
+        .logo-subtext {
+            font-size: 9px;
+            opacity: 0.9;
+            margin-top: 2px;
+            display: block;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .header-nav span {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        /* --- Success Section --- */
+        .success-section {
+            text-align: center;
+            padding: 20px 15px 15px;
+        }
+
+        .success-icon-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .success-icon {
+            background-color: #f75b00;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 34px;
+            font-weight: bold;
+            margin: 0 auto;
+        }
+
+        /* The little lines around the checkmark */
+        .success-icon-container::before,
+        .success-icon-container::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 3px;
+            background-color: #f75b00;
+            top: 50%;
+        }
+        .success-icon-container::before {
+            left: -28px;
+            transform: rotate(-45deg);
+            box-shadow: -10px 6px 0 #f75b00, -6px 18px 0 #f75b00;
+        }
+        .success-icon-container::after {
+            right: -28px;
+            transform: rotate(45deg);
+            box-shadow: 10px 6px 0 #f75b00, 6px 18px 0 #f75b00;
+        }
+
+        .title-text {
+            color: #f75b00;
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .subtitle-text {
+            color: #1a237e; 
+            font-size: 13px;
+            line-height: 1.4;
+            max-width: 320px;
+            margin: 0 auto;
+            font-weight: 600;
+        }
+
+        .subtitle-text span {
+            color: #f75b00;
+            font-weight: 800;
+        }
+
+        /* --- Main Details Box --- */
+        .main-details-box {
+            background-color: #fcf8f5;
+            margin: 12px;
+            border-radius: 8px;
+            padding: 15px 12px;
+        }
+
+        /* Sender to Recipient */
+        .transfer-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #f0e0d5;
+            padding-bottom: 15px;
+            gap: 5px;
+        }
+
+        .profile-block {
+            display: flex;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .profile-icon {
+            background-color: #f75b00;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1px; 
+        }
+
+        .profile-info .tag {
+            background-color: #f75b00;
+            color: white;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            display: inline-block;
+            width: fit-content;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .profile-info .name {
+            color: #1a237e;
+            font-weight: 800;
+            font-size: 13px;
+            margin-top: 2px;
+            line-height: 1.2;
+        }
+
+        .profile-info .label {
+            color: #666;
+            font-size: 10px;
+            margin-top: 4px; 
+        }
+
+        .profile-info .value {
+            color: #1a237e;
+            font-weight: 700;
+            font-size: 12px;
+        }
+
+        .profile-info .country {
+            color: #666;
+            font-size: 10px;
+            margin-top: 4px;
+        }
+
+        .arrow-right {
+            color: #f75b00;
+            font-size: 22px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            height: 35px; 
+        }
+
+        /* List details */
+        .list-details {
+            display: flex;
+            flex-direction: column;
+            gap: 12px; 
+        }
+
+        .list-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .list-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #1a237e;
+            font-weight: 700;
+            font-size: 12px;
+        }
+
+        .list-icon {
+            background-color: #f75b00;
+            color: white;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            flex-shrink: 0;
+            font-weight: bold;
+        }
+
+        .list-right {
+            text-align: right;
+            font-weight: 800;
+            color: #1a237e;
+            font-size: 14px;
+        }
+        
+        .list-right.money {
+            color: #f75b00;
+            font-size: 18px;
+        }
+
+        .status-badge {
+            background-color: #fde8d7;
+            color: #f75b00;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        /* Orange Money Logo text for payment method */
+        .om-logo-text {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #333;
+            font-weight: 800;
+            font-size: 14px;
+            line-height: 1.1;
+        }
+        .om-logo-text span {
+            color: #f75b00;
+            font-size: 16px;
+            letter-spacing: -1px;
+        }
+
+        /* --- Info Box --- */
+        .info-box {
+            background-color: #fcf8f5;
+            border-radius: 8px;
+            margin: 0 12px 12px;
+            padding: 10px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            border-left: 3px solid #f75b00;
+        }
+
+        .info-icon {
+            background-color: #f75b00;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+
+        .info-text {
+            color: #1a237e;
+            font-size: 10px;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        /* --- Button --- */
+        .btn-container {
+            padding: 0 12px 15px;
+        }
+
+        .btn {
+            background-color: #f75b00;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 13px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        /* --- Footer Warning --- */
+        .footer-warning {
+            background-color: #fcf8f5;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-top: 1px solid #f0e0d5;
+        }
+
+        .shield-icon {
+            border: 2px solid #f75b00;
+            color: #f75b00;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .warning-text h4 {
+            color: #f75b00;
+            font-size: 10px;
+            margin-bottom: 2px;
+            text-transform: uppercase;
+        }
+
+        .warning-text p {
+            color: #444;
+            font-size: 9px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="receipt-container">
+        
+        <!-- Header -->
+        <div class="header">
+            <div>
+                <div class="logo-container">
+                    <div class="logo-icon">↗↙</div>
+                    <div class="logo-text">Orange<br>Money</div>
+                </div>
+                <div class="logo-subtext">Money Transfer. More Possibilities.</div>
+            </div>
+            <div class="header-nav">
+                <span>🌐 Send</span>
+                <span>|</span>
+                <span>Receive</span>
+                <span>|</span>
+                <span>Track</span>
+            </div>
+        </div>
+
+        <!-- Success Icon & Title -->
+        <div class="success-section">
+            <div class="success-icon-container">
+                <div class="success-icon">✓</div>
+            </div>
+            <h1 class="title-text">Transfer Successful</h1>
+            <p class="subtitle-text">
+                Your transfer has been processed and sent<br>
+                successfully to the recipient's <span>Orange Money</span> account.
+            </p>
+        </div>
+
+        <!-- Main Details -->
+        <div class="main-details-box">
+            
+            <!-- Sender / Recipient -->
+            <div class="transfer-flow">
+                <div class="profile-block">
+                    <div class="profile-icon">👤</div>
+                    <div class="profile-info">
+                        <span class="tag">From</span>
+                        <span class="name" contenteditable="true" spellcheck="false">LUKA LOKIRAESE</span>
+                        <div class="label">Sender Name</div>
+                        <div class="label" style="margin-top: 6px;">Account ID</div>
+                        <span class="value" contenteditable="true" spellcheck="false">L6790861</span>
+                        <div class="country">Country: <span contenteditable="true" spellcheck="false">Uganda</span></div>
+                    </div>
+                </div>
+
+                <div class="arrow-right">➔</div>
+
+                <div class="profile-block">
+                    <div class="profile-icon">👤</div>
+                    <div class="profile-info">
+                        <span class="tag">To</span>
+                        <span class="name" contenteditable="true" spellcheck="false">KABELO THABO<br>MOLEFE</span>
+                        <div class="label">Recipient Name</div>
+                        <div class="label" style="margin-top: 6px;">Orange Money Ref Number</div>
+                        <span class="value" contenteditable="true" spellcheck="false">REF-88473621</span>
+                        <div class="country">Country: <span contenteditable="true" spellcheck="false">Botswana</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- List of transaction details -->
+            <div class="list-details">
+                <div class="list-row">
+                    <div class="list-left">
+                        <div class="list-icon">OM</div>
+                        <span>Payment Method</span>
+                    </div>
+                    <div class="om-logo-text">
+                        <span>↗↙</span> Orange<br>Money
+                    </div>
+                </div>
+                
+                <div class="list-row">
+                    <div class="list-left">
+                        <div class="list-icon">BWP</div>
+                        <span>Amount</span>
+                    </div>
+                    <!-- Changed to P 27,000.00 as requested -->
+                    <div class="list-right money" contenteditable="true" spellcheck="false">P 27,000.00</div>
+                </div>
+                
+                <div class="list-row">
+                    <div class="list-left">
+                        <div class="list-icon">⇄</div>
+                        <span>Transaction Reference</span>
+                    </div>
+                    <div class="list-right" contenteditable="true" spellcheck="false">DHS88473621</div>
+                </div>
+                
+                <div class="list-row">
+                    <div class="list-left">
+                        <div class="list-icon">📅</div>
+                        <span>Date</span>
+                    </div>
+                    <div class="list-right" contenteditable="true" spellcheck="false">26/10/2026</div>
+                </div>
+                
+                <div class="list-row">
+                    <div class="list-left">
+                        <div class="list-icon">✓</div>
+                        <span>Status</span>
+                    </div>
+                    <div class="status-badge">
+                        <span>✓</span> <span contenteditable="true" spellcheck="false">Transfer Successful</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info Box -->
+        <div class="info-box">
+            <div class="info-icon">i</div>
+            <div class="info-text">
+                The funds have been sent to your Orange Money account.<br>
+                You can check your balance in your account or contact them<br>
+                for confirmation.
+            </div>
+        </div>
+
+        <!-- Button -->
+        <div class="btn-container">
+            <div class="btn">
+                📄 View Transaction History ➔
+            </div>
+        </div>
+
+        <!-- Footer Warning -->
+        <div class="footer-warning">
+            <div class="shield-icon">✓</div>
+            <div class="warning-text">
+                <h4>DEMO — NOT A REAL TRANSACTION</h4>
+                <p>This is a sample image for illustration purposes only.</p>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+                          </html>
